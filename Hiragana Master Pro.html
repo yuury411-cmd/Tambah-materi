@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hiragana Master - Pro Edition</title>
+<style>
+:root {
+  --bg: #F6F2E9; 
+  --surface: #FFFFFF; 
+  --ink: #201D1A; 
+  --ink-muted: #6B655C;
+  --line: #E3DCC8; 
+  --stamp: #A6342A; 
+  --stamp-hover: #882920; 
+  --success: #3D6B4F; 
+  --success-bg: #E7EFE8;
+  --danger: #A6342A; 
+  --danger-bg: #F6E7E5; 
+  --radius: 10px; 
+  --accent: #D4A359; 
+  --accent-bg: #FAF3E0;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+:root[data-theme="dark"] {
+  --bg: #1A1815; 
+  --surface: #242119; 
+  --ink: #F1ECE2; 
+  --ink-muted: #B6AE9F;
+  --line: #3A362C; 
+  --stamp: #C9584B; 
+  --stamp-hover: #e06658; 
+  --success: #7FBF93; 
+  --success-bg: #1F2E23;
+  --danger: #C9584B; 
+  --danger-bg: #2E211F; 
+  --accent: #E5B869; 
+  --accent-bg: #2B2317;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1A1815; 
+    --surface: #242119; 
+    --ink: #F1ECE2; 
+    --ink-muted: #B6AE9F;
+    --line: #3A362C; 
+    --stamp: #C9584B; 
+    --stamp-hover: #e06658; 
+    --success: #7FBF93; 
+    --success-bg: #1F2E23;
+    --danger: #C9584B; 
+    --danger-bg: #2E211F; 
+    --accent: #E5B869; 
+    --accent-bg: #2B2317;
+  }
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0; 
+  background: var(--bg); 
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Yu Gothic", "Noto Sans JP", sans-serif;
+  line-height: 1.5; 
+  -webkit-tap-highlight-color: transparent;
+}
+h1, h2, h3, h4 { font-family: "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif; font-weight: 600; margin: 0; }
+:focus-visible { outline: 2px solid var(--stamp); outline-offset: 2px; }
+
+.topbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); padding: 12px 16px 10px; border-bottom: 1px solid var(--line); }
+.top-header { display: flex; justify-content: space-between; align-items: center; }
+.topbar h1 { font-size: 1.3rem; }
+.subtitle { color: var(--ink-muted); font-size: .8rem; margin-top: 1px; }
+.top-actions { display: flex; gap: 8px; align-items: center; }
+.theme-toggle, .icon-head-btn { background: none; border: 1px solid var(--line); border-radius: 50%; width: 36px; height: 36px; cursor: pointer; color: var(--ink); display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+.net-status { font-size: .7rem; padding: 2px 8px; border-radius: 99px; font-weight: bold; }
+.net-online { background: var(--success-bg); color: var(--success); }
+.net-offline { background: var(--danger-bg); color: var(--danger); }
+
+.progress-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.progress-track { flex: 1; height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--stamp); transition: width .25s ease; width: 0%; }
+.progress-label { font-size: .75rem; color: var(--ink-muted); white-space: nowrap; }
+
+.tabs-scroll { display: flex; gap: 6px; margin-top: 10px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+.tabs-scroll::-webkit-scrollbar { display: none; }
+.tab-btn { flex: 0 0 auto; min-height: 38px; padding: 0 14px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 8px; font-size: .85rem; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+.tab-btn.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+main { padding: 16px; padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 32px); max-width: 680px; margin: 0 auto; }
+.view { display: none; }
+.view.active { display: block; }
+
+.last-pos-banner { background: var(--accent-bg); border: 1px solid var(--accent); border-radius: var(--radius); padding: 10px 14px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; font-size: .85rem; }
+.last-pos-banner button { background: var(--accent); color: #fff; border: none; padding: 4px 10px; border-radius: 6px; font-weight: 600; cursor: pointer; }
+
+.row-group { margin-bottom: 22px; }
+.row-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; }
+.row-head h2 { font-size: 1rem; color: var(--ink-muted); letter-spacing: .02em; }
+.mastery-btn { min-height: 32px; padding: 0 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink-muted); font-size: .75rem; font-weight: 600; cursor: pointer; }
+.mastery-btn.on { background: var(--success-bg); color: var(--success); border-color: var(--success); }
+
+.kana-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 8px; }
+.kana-cell { position: relative; aspect-ratio: 1; min-height: 60px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); cursor: pointer; perspective: 600px; }
+.kana-cell .inner { position: relative; width: 100%; height: 100%; transition: transform .25s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+.kana-cell.flipped .inner { transform: rotateY(180deg); }
+.face { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: var(--radius); }
+.face.front { font-size: 1.6rem; }
+.face.back { transform: rotateY(180deg); font-size: .8rem; color: var(--ink-muted); gap: 2px; }
+
+.card-actions { position: absolute; top: 2px; right: 2px; display: flex; gap: 2px; z-index: 2; }
+.icon-btn { background: none; border: none; padding: 2px 4px; font-size: .75rem; cursor: pointer; opacity: 0.75; border-radius: 4px; }
+.icon-btn:hover { opacity: 1; background: rgba(0,0,0,0.05); }
+.bookmark-star { position: absolute; top: 2px; left: 4px; font-size: .75rem; cursor: pointer; z-index: 2; opacity: 0.3; }
+.bookmark-star.active { opacity: 1; color: var(--accent); }
+
+.row-example { font-size: .82rem; color: var(--ink-muted); margin-top: 8px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.audio-inline-btn { background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 2px 6px; font-size: .75rem; cursor: pointer; color: var(--ink); display: inline-flex; align-items: center; gap: 4px; }
+
+.info-card { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); margin-bottom: 10px; overflow: hidden; }
+.info-card summary { padding: 14px; font-weight: 600; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; min-height: 44px; }
+.info-card summary::-webkit-details-marker { display: none; }
+.info-card summary::after { content: '+'; color: var(--ink-muted); font-size: 1.2rem; }
+.info-card[open] summary::after { content: '\2013'; }
+.info-card .body { padding: 0 14px 16px; color: var(--ink-muted); font-size: .9rem; }
+.map-group { margin-bottom: 10px; }
+.map-group-label { font-size: .75rem; color: var(--ink-muted); font-weight: 600; display: block; margin-bottom: 4px; }
+.map-grid { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.map-pair { font-size: .95rem; color: var(--ink); display: inline-flex; align-items: center; gap: 4px; }
+.map-pair b { color: var(--stamp); }
+
+.explanation-container { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; margin-bottom: 20px; }
+.exp-section { margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px dashed var(--line); }
+.exp-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.exp-title { font-size: 1.1rem; color: var(--stamp); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+.exp-text { font-size: .9rem; color: var(--ink-muted); line-height: 1.6; margin: 0 0 8px; }
+.exp-list { margin: 0; padding-left: 20px; font-size: .9rem; color: var(--ink-muted); }
+.exp-list li { margin-bottom: 4px; }
+.exp-box-wrong { background: var(--danger-bg); border-left: 4px solid var(--danger); padding: 8px 12px; border-radius: 4px; font-size: .85rem; margin: 6px 0; }
+.exp-box-correct { background: var(--success-bg); border-left: 4px solid var(--success); padding: 8px 12px; border-radius: 4px; font-size: .85rem; margin: 6px 0; }
+.exp-tip { background: var(--accent-bg); border: 1px solid var(--accent); border-radius: 6px; padding: 10px 12px; font-size: .88rem; }
+
+.hint-box { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 16px; text-align: center; margin-bottom: 16px; }
+.hint-box p { color: var(--ink-muted); font-size: .9rem; margin: 8px 0 16px; }
+.btn { min-height: 40px; padding: 0 16px; border-radius: 8px; font-size: .9rem; font-weight: 600; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: opacity .15s ease; }
+.btn-primary { background: var(--stamp); color: #fff; }
+.btn-primary:hover { background: var(--stamp-hover); }
+.btn-secondary { background: var(--surface); color: var(--ink); border: 1px solid var(--line); }
+.btn-danger { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger); }
+.btn-accent { background: var(--accent); color: #fff; }
+.btn:active { opacity: .85; }
+
+.quiz-progress { font-size: .8rem; color: var(--ink-muted); margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+.quiz-kana { font-size: 3.5rem; text-align: center; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 0; margin-bottom: 16px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.quiz-option { min-height: 48px; border: 1px solid var(--line); background: var(--surface); border-radius: var(--radius); font-size: 1rem; text-align: center; padding: 8px; color: var(--ink); cursor: pointer; font-weight: 600; }
+.quiz-option.correct { background: var(--success-bg); border-color: var(--success); color: var(--success); }
+.quiz-option.wrong { background: var(--danger-bg); border-color: var(--danger); color: var(--danger); }
+.quiz-option:disabled { cursor: default; }
+.feedback { margin-top: 14px; padding: 12px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); font-size: .88rem; }
+.feedback.ok { border-color: var(--success); }
+.feedback.no { border-color: var(--danger); }
+.feedback b { display: block; margin-bottom: 4px; }
+.quiz-nav { margin-top: 14px; display: flex; justify-content: flex-end; }
+
+.result-score { font-size: 2.2rem; font-weight: 700; text-align: center; margin: 10px 0 4px; font-family: "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif; }
+.result-pct { text-align: center; color: var(--ink-muted); margin-bottom: 16px; }
+.review-list { list-style: none; padding: 0; margin: 0 0 16px; }
+.review-list li { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: .88rem; }
+.tag { font-size: .75rem; padding: 2px 8px; border-radius: 99px; }
+.tag.ok { background: var(--success-bg); color: var(--success); }
+.tag.no { background: var(--danger-bg); color: var(--danger); }
+
+.materi-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
+.material-card { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); padding: 14px; }
+.material-card h3 { font-size: 1rem; margin: 0 0 6px; }
+.badge-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.badge { font-size: .7rem; padding: 3px 8px; border-radius: 99px; background: var(--bg); border: 1px solid var(--line); color: var(--ink-muted); }
+.material-card-actions { display: flex; gap: 8px; }
+.material-card-actions .btn { flex: 1; min-height: 36px; }
+
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: flex; align-items: flex-end; z-index: 30; }
+.modal-overlay.hidden { display: none; }
+.modal { background: var(--surface); width: 100%; max-height: 90vh; overflow-y: auto; border-radius: 16px 16px 0 0; padding: 20px 16px calc(env(safe-area-inset-bottom, 0px) + 20px); margin: 0 auto; max-width: 640px; }
+.modal h2 { font-size: 1.1rem; margin-bottom: 14px; }
+
+.canvas-container { display: flex; flex-direction: column; align-items: center; margin: 10px 0; }
+.canvas-wrapper { position: relative; width: 200px; height: 200px; border: 2px dashed var(--line); border-radius: 12px; background: var(--bg); touch-action: none; }
+.canvas-guide { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 7rem; opacity: 0.18; pointer-events: none; font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; color: var(--ink); }
+#writeCanvas { position: absolute; inset: 0; border-radius: 12px; cursor: crosshair; }
+.canvas-tools { display: flex; gap: 6px; margin-top: 10px; width: 100%; justify-content: center; flex-wrap: wrap; }
+
+.form-field { margin-bottom: 12px; }
+.form-field label { display: block; font-size: .78rem; color: var(--ink-muted); margin-bottom: 4px; font-weight: 600; }
+.form-field input, .form-field select, .form-field textarea { width: 100%; min-height: 40px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); font-size: .9rem; padding: 8px 10px; font-family: inherit; }
+.form-field textarea { min-height: 100px; resize: vertical; line-height: 1.4; }
+.form-error { color: var(--danger); font-size: .8rem; margin-top: 4px; display: none; }
+.form-error.show { display: block; }
+.modal-actions { display: flex; gap: 8px; }
+.modal-actions .btn { flex: 1; }
+
+.chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-size: .78rem; padding: 4px 10px; border-radius: 999px; background: var(--bg); border: 1px solid var(--line); color: var(--ink); }
+
+.dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.dash-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; font-size: .85rem; }
+.dash-card h4 { font-size: .85rem; color: var(--ink-muted); margin-bottom: 4px; }
+.dash-val { font-size: 1.4rem; font-weight: 700; color: var(--stamp); }
+
+.planner-box { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; margin-bottom: 14px; }
+.streak-dots { display: flex; gap: 6px; margin-top: 8px; }
+.dot { width: 28px; height: 28px; border-radius: 50%; background: var(--bg); border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-size: .7rem; color: var(--ink-muted); }
+.dot.active { background: var(--stamp); color: #fff; border-color: var(--stamp); }
+
+.active-recall-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px 16px; text-align: center; margin-bottom: 14px; }
+.recall-kana { font-size: 4rem; margin-bottom: 10px; font-family: "Hiragino Mincho ProN", serif; }
+.recall-answer { font-size: 1.5rem; color: var(--stamp); margin: 14px 0; font-weight: bold; display: none; }
+
+.timer-display { font-size: 2.8rem; font-weight: 700; text-align: center; font-family: monospace; margin: 10px 0; color: var(--stamp); }
+
+#toastContainer { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 100; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+.toast { background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: 8px; font-size: .85rem; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.15); opacity: 0; transform: translateY(10px); transition: all .25s ease; pointer-events: auto; }
+.toast.show { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="top-header">
+    <div>
+      <h1>Hiragana Master Pro</h1>
+      <div class="subtitle">Modul Pembelajaran &amp; Latihan Terpadu</div>
+    </div>
+    <div class="top-actions">
+      <span id="netStatus" class="net-status net-online">🟢 Online</span>
+      <button class="icon-head-btn" id="openToolsBtn" title="Fitur Tambahan">🛠️</button>
+      <button class="theme-toggle" id="themeToggleBtn" title="Ganti Tema">🌙</button>
+    </div>
+  </div>
+  <div class="progress-row">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label" id="progressLabel">0/46 dikuasai</div>
+  </div>
+  <div class="tabs-scroll">
+    <button class="tab-btn active" id="tabBelajar" data-tab="belajar">📖 Belajar</button>
+    <button class="tab-btn" id="tabPenjelasan" data-tab="penjelasan">💡 Penjelasan Lengkap</button>
+    <button class="tab-btn" id="tabLatihan" data-tab="latihan">✍️ Kuis &amp; Latihan</button>
+    <button class="tab-btn" id="tabRecall" data-tab="recall">🧠 Active Recall</button>
+    <button class="tab-btn" id="tabMateri" data-tab="materi">📚 Materi Saya</button>
+    <button class="tab-btn" id="tabDashboard" data-tab="dashboard">📊 Progres &amp; Alat</button>
+  </div>
+</div>
+
+<main>
+  <div class="last-pos-banner" id="lastPosBanner" style="display:none;">
+    <span>📌 Terakhir dibuka: <b id="lastPosTitle">-</b></span>
+    <button id="resumeLastPosBtn">Lanjutkan</button>
+  </div>
+
+  <section class="view active" id="viewBelajar" data-tab="belajar">
+    <div id="gojuonContainer"></div>
+    <div id="variasiContainer"></div>
+  </section>
+
+  <section class="view" id="viewPenjelasan" data-tab="penjelasan">
+    <div class="form-field">
+      <label for="expTopicSelect">Pilih Topik Pembelajaran:</label>
+      <select id="expTopicSelect" onchange="renderFullExplanation(this.value)">
+        <option value="Vokal">Vokal (あいうえお)</option>
+        <option value="Baris K">Baris K (かきくけこ)</option>
+        <option value="Baris S">Baris S (さしすせそ)</option>
+        <option value="Baris T">Baris T (たちつてと)</option>
+        <option value="Baris N">Baris N (なにぬねの)</option>
+        <option value="Baris H">Baris H (はひふへほ)</option>
+        <option value="Baris M">Baris M (まみむめも)</option>
+        <option value="Baris Y">Baris Y (やゆよ)</option>
+        <option value="Baris R">Baris R (らりるれろ)</option>
+        <option value="Baris W & N">Baris W & N (わをん)</option>
+        <option value="Dakuten">Dakuten &amp; Handakuten (゛ ゜)</option>
+        <option value="Yōon">Kombinasi Yōon (ゃゅょ)</option>
+      </select>
+    </div>
+    <div id="explanationDisplay"></div>
+  </section>
+
+  <section class="view" id="viewLatihan" data-tab="latihan">
+    <div id="quizStart" class="hint-box">
+      <h2>Latihan &amp; Kuis Hiragana</h2>
+      <p>Pilih jenis kuis untuk menguji dan memperkuat pemahaman karakter kamu.</p>
+      <div style="display:flex; gap:8px; justify-content:center; margin-bottom:14px; flex-wrap:wrap;">
+        <button class="btn btn-secondary" onclick="startCustomQuiz(10, 'standard')">Kuis Standar (10 Soal)</button>
+        <button class="btn btn-accent" onclick="startExamMode()">🧪 Mode Ujian Timed (15 Soal)</button>
+        <button class="btn btn-secondary" onclick="startAudioQuiz()">🔊 Kuis Pendengaran (Audio)</button>
+        <button class="btn btn-secondary" onclick="startMixedPractice()">🔀 Kuis Campuran</button>
+      </div>
+    </div>
+
+    <div id="quizPlay" style="display:none;">
+      <div class="quiz-progress">
+        <span id="quizProgress"></span>
+        <span id="quizTimerDisplay" style="color:var(--stamp); font-weight:bold;"></span>
+      </div>
+      <div class="quiz-kana" id="quizKana">
+        <span id="quizKanaText"></span>
+        <button class="btn btn-secondary" id="quizAudioRepeatBtn" style="display:none; margin-top:8px;" onclick="playQuizAudio()">🔊 Putar Suara Latihan</button>
+      </div>
+      <div class="quiz-options" id="quizOptions"></div>
+      <div id="quizFeedback"></div>
+      <div class="quiz-nav" id="quizNav" style="display:none;">
+        <button class="btn btn-primary" id="nextBtn">Lanjut ➔</button>
+      </div>
+    </div>
+
+    <div id="quizResult" style="display:none;">
+      <div class="result-score" id="resultScore"></div>
+      <div class="result-pct" id="resultPct"></div>
+      <ul class="review-list" id="reviewList"></ul>
+      <div class="result-actions" style="display:flex; gap:8px; justify-content:center;">
+        <button class="btn btn-primary" id="retryBtn">Ulangi Kuis</button>
+        <button class="btn btn-secondary" onclick="switchTab('belajar')">Kembali ke Belajar</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="viewRecall" data-tab="recall">
+    <div class="hint-box">
+      <h2>🧠 Active Recall &amp; Spaced Repetition</h2>
+      <p>Coba ingat cara baca karakter di bawah ini sebelum membuka jawabannya.</p>
+    </div>
+    <div class="active-recall-card">
+      <div class="recall-kana" id="recallKanaDisplay">あ</div>
+      <button class="btn btn-secondary" id="showRecallAnsBtn" onclick="toggleRecallAnswer()">👁️ Tampilkan Jawaban</button>
+      <div class="recall-answer" id="recallAnswerDisplay">a</div>
+      <div id="recallControls" style="display:none; gap:8px; justify-content:center; margin-top:14px; flex-wrap:wrap;">
+        <button class="btn btn-danger" onclick="rateRecall(1)">❌ Lupa (1 Hari)</button>
+        <button class="btn btn-secondary" onclick="rateRecall(2)">🤔 Ragu (3 Hari)</button>
+        <button class="btn btn-primary" onclick="rateRecall(3)">✅ Ingat (7 Hari)</button>
+      </div>
+    </div>
+    <div class="info-card">
+      <summary>📦 Kartu Menunggu Review SRS (<span id="srsCount">0</span>)</summary>
+      <div class="body" id="srsList">Belum ada kartu yang dijadwalkan ulang.</div>
+    </div>
+  </section>
+
+  <section class="view" id="viewMateri" data-tab="materi">
+    <div id="materiListWrap">
+      <div id="materiEmpty" class="hint-box" style="display:none;">
+        <h2>📚 Belum ada materi kustom</h2>
+        <p>Tambahkan materi kustommu. Sistem akan menyusun penjelasan, kuis, dan latihan secara otomatis.</p>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <span style="font-weight:bold; font-size:.9rem;">Folder:</span>
+        <select id="folderFilter" onchange="renderMateriList()" style="padding:4px 8px; border-radius:6px; border:1px solid var(--line); background:var(--surface); color:var(--ink);">
+          <option value="ALL">Semua Folder</option>
+          <option value="Bahasa Jepang">Bahasa Jepang</option>
+          <option value="Tata Bahasa">Tata Bahasa</option>
+          <option value="Kosakata">Kosakata</option>
+        </select>
+      </div>
+      <div class="materi-list" id="materiList"></div>
+      <button class="btn btn-primary" style="width:100%;" id="openAddMateriBtn">+ Tambah Materi Baru</button>
+    </div>
+    <div id="materiDetail" style="display:none;"></div>
+  </section>
+
+  <section class="view" id="viewDashboard" data-tab="dashboard">
+    <h2>📊 Analisis &amp; Alat Pembelajaran</h2>
+    <div style="height:10px;"></div>
+    
+    <div class="dashboard-grid">
+      <div class="dash-card">
+        <h4>Akurasi Kuis</h4>
+        <div class="dash-val" id="dashAccuracy">0%</div>
+      </div>
+      <div class="dash-card">
+        <h4>Percobaan Kuis</h4>
+        <div class="dash-val" id="dashAttempts">0</div>
+      </div>
+    </div>
+
+    <div class="planner-box">
+      <h4>🎯 Target Belajar (Study Goal)</h4>
+      <p style="font-size:.82rem; color:var(--ink-muted); margin:4px 0 8px;">Tetapkan target kuasai karakter Hiragana:</p>
+      <div style="display:flex; gap:8px;">
+        <input type="number" id="goalInputVal" placeholder="Misal: 46" style="width:100px; padding:6px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink);">
+        <button class="btn btn-primary" onclick="setStudyGoal()">Simpan Target</button>
+      </div>
+      <div style="margin-top:8px; font-size:.85rem;" id="goalStatusText">Target belum diset.</div>
+    </div>
+
+    <div class="planner-box">
+      <h4>📅 Kalender Belajar &amp; Streak</h4>
+      <div class="streak-dots" id="streakDotsContainer"></div>
+    </div>
+
+    <div class="info-card" open>
+      <summary>🧩 Detektor Kelemahan (Perlu Dilatih)</summary>
+      <div class="body" id="weaknessList">Belum ada cukup data kesalahan kuis.</div>
+    </div>
+
+    <div class="info-card">
+      <summary>📖 Kamus / Glossary Istilah</summary>
+      <div class="body">
+        <input type="text" id="glossarySearch" placeholder="Cari kosakata/istilah..." onkeyup="filterGlossary()" style="width:100%; padding:6px 10px; border-radius:6px; border:1px solid var(--line); margin-bottom:8px; background:var(--bg); color:var(--ink);">
+        <div id="glossaryContent"></div>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <summary>🔖 Karakter Di-Bookmark</summary>
+      <div class="body" id="bookmarkList">Belum ada karakter yang di-bookmark.</div>
+    </div>
+
+    <div class="planner-box">
+      <h4>📤 Cadangan Data &amp; Ekspor Progress</h4>
+      <p style="font-size:.8rem; color:var(--ink-muted);">Ekspor atau impor seluruh catatan, target, dan riwayat belajarmu dalam format JSON.</p>
+      <div style="display:flex; gap:8px; margin-top:8px;">
+        <button class="btn btn-secondary" onclick="exportUserData()">📥 Ekspor JSON</button>
+        <button class="btn btn-secondary" onclick="document.getElementById('importFileInput').click()">📤 Impor JSON</button>
+        <input type="file" id="importFileInput" style="display:none;" accept=".json" onchange="importUserData(event)">
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="modal-overlay hidden" id="addMateriOverlay">
+  <div class="modal">
+    <h2>Tambah Materi Baru</h2>
+    <div class="form-field">
+      <label for="materiJudul">Judul Materi</label>
+      <input type="text" id="materiJudul" placeholder="Misal: Partikel wa dan ga">
+    </div>
+    <div class="form-field">
+      <label for="materiKategori">Kategori / Folder</label>
+      <select id="materiKategori">
+        <option value="Bahasa Jepang">Bahasa Jepang</option>
+        <option value="Tata Bahasa">Tata Bahasa</option>
+        <option value="Kosakata">Kosakata</option>
+      </select>
+    </div>
+    <div class="form-field">
+      <label for="materiTingkat">Tingkat Kesulitan</label>
+      <select id="materiTingkat">
+        <option>Pemula</option>
+        <option>Menengah</option>
+        <option>Lanjutan</option>
+      </select>
+    </div>
+    <div class="form-field">
+      <label for="materiIsi">Isi Penjelasan Materi</label>
+      <textarea id="materiIsi" placeholder="Tuliskan penjelasan rinci di sini (minimal 40 karakter)..."></textarea>
+      <div class="form-error" id="materiError">Judul dan isi materi wajib diisi (minimal 40 karakter).</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="cancelMateriBtn">Batal</button>
+      <button class="btn btn-primary" id="saveMateriBtn">Simpan Materi</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay hidden" id="drawModalOverlay">
+  <div class="modal">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h2 id="drawModalTitle">Latihan Menulis</h2>
+      <button class="btn btn-secondary" style="min-height:30px; padding:0 8px;" id="closeDrawBtn">✕</button>
+    </div>
+    <div class="canvas-container">
+      <div class="canvas-wrapper">
+        <div class="canvas-guide" id="canvasGuideChar">あ</div>
+        <canvas id="writeCanvas" width="200" height="200"></canvas>
+      </div>
+      <div class="canvas-tools">
+        <button class="btn btn-secondary" id="playCanvasAudioBtn">🔊 Dengarkan Suara</button>
+        <button class="btn btn-secondary" id="clearCanvasBtn">Hapus Canvas</button>
+        <button class="btn btn-secondary" id="toggleGuideBtn">Sembunyikan Bayangan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay hidden" id="toolsModalOverlay">
+  <div class="modal">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <h2>⏱️ Sesi Fokus (Focus Session)</h2>
+      <button class="btn btn-secondary" style="min-height:30px; padding:0 8px;" onclick="closeModal('toolsModalOverlay')">✕</button>
+    </div>
+    <div style="text-align:center;">
+      <p style="font-size:.85rem; color:var(--ink-muted);">Pilih durasi belajar tanpa gangguan:</p>
+      <div style="display:flex; gap:6px; justify-content:center; margin:10px 0;">
+        <button class="btn btn-secondary" onclick="setFocusTimer(15)">15 Menit</button>
+        <button class="btn btn-secondary" onclick="setFocusTimer(25)">25 Menit</button>
+        <button class="btn btn-secondary" onclick="setFocusTimer(30)">30 Menit</button>
+      </div>
+      <div class="timer-display" id="focusTimerDisplay">25:00</div>
+      <div style="display:flex; gap:8px; justify-content:center;">
+        <button class="btn btn-primary" id="startTimerBtn" onclick="toggleFocusTimer()">▶ Mulai</button>
+        <button class="btn btn-secondary" onclick="resetFocusTimer()">↻ Reset</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Custom Confirmation Modal (Replacing native confirm) -->
+<div class="modal-overlay hidden" id="confirmModalOverlay">
+  <div class="modal">
+    <h2 id="confirmTitle">Konfirmasi Hapus</h2>
+    <p id="confirmMessage" style="color:var(--ink-muted); font-size:.9rem; margin-bottom:16px;">Apakah Anda yakin ingin menghapus materi ini?</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="confirmCancelBtn">Batal</button>
+      <button class="btn btn-danger" id="confirmOkBtn">Hapus</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Notifications Container -->
+<div id="toastContainer"></div>
+
+<script>
+const GOJUON = [
+ {label:'Vokal',example:{word:'あさ',romaji:'asa',meaning:'pagi'},chars:[['あ','a'],['い','i'],['う','u'],['え','e'],['お','o']]},
+ {label:'Baris K',example:{word:'かき',romaji:'kaki',meaning:'tiram / buah kesemek'},chars:[['か','ka'],['き','ki'],['く','ku'],['け','ke'],['こ','ko']]},
+ {label:'Baris S',example:{word:'すし',romaji:'sushi',meaning:'sushi'},chars:[['さ','sa'],['し','shi'],['す','su'],['せ','se'],['そ','so']]},
+ {label:'Baris T',example:{word:'つき',romaji:'tsuki',meaning:'bulan'},chars:[['た','ta'],['ち','chi'],['つ','tsu'],['て','te'],['と','to']]},
+ {label:'Baris N',example:{word:'ねこ',romaji:'neko',meaning:'kucing'},chars:[['な','na'],['に','ni'],['ぬ','nu'],['ね','ne'],['の','no']]},
+ {label:'Baris H',example:{word:'はな',romaji:'hana',meaning:'bunga'},chars:[['は','ha'],['ひ','hi'],['ふ','fu'],['へ','he'],['ほ','ho']]},
+ {label:'Baris M',example:{word:'みみ',romaji:'mimi',meaning:'telinga'},chars:[['ま','ma'],['み','mi'],['む','mu'],['め','me'],['も','mo']]},
+ {label:'Baris Y',example:{word:'やま',romaji:'yama',meaning:'gunung'},chars:[['や','ya'],['ゆ','yu'],['よ','yo']]},
+ {label:'Baris R',example:{word:'さくら',romaji:'sakura',meaning:'sakura'},chars:[['ら','ra'],['り','ri'],['る','ru'],['れ','re'],['ろ','ro']]},
+ {label:'Baris W & N',example:{word:'りんご',romaji:'ringo',meaning:'apel'},note:'を dibaca "o" saat jadi partikel.',chars:[['わ','wa'],['を','wo'],['ん','n']]}
+];
+
+const DAKUTEN = {
+ 'K → G':[['か','が','ga'],['き','ぎ','gi'],['く','ぐ','gu'],['け','げ','ge'],['こ','ご','go']],
+ 'S → Z':[['さ','ざ','za'],['し','じ','ji'],['す','ず','zu'],['せ','ぜ','ze'],['そ','ぞ','zo']],
+ 'T → D':[['た','だ','da'],['ち','ぢ','ji'],['つ','づ','zu'],['て','で','de'],['と','ど','do']],
+ 'H → B':[['は','ば','ba'],['ひ','び','bi'],['ふ','ぶ','bu'],['へ','べ','be'],['ほ','ぼ','bo']]
+};
+const HANDAKUTEN = [['は','ぱ','pa'],['ひ','ぴ','pi'],['ふ','ぷ','pu'],['へ','ぺ','pe'],['ほ','ぽ','po']];
+const YOON = {
+ 'Baris K':[['きゃ','kya'],['きゅ','kyu'],['きょ','kyo']],
+ 'Baris S':[['しゃ','sha'],['しゅ','shu'],['しょ','sho']],
+ 'Baris T':[['ちゃ','cha'],['ちゅ','chu'],['ちょ','cho']],
+ 'Baris N':[['にゃ','nya'],['にゅ','nyu'],['にょ','nyo']]
+};
+
+const ALL_CHARS = GOJUON.flatMap(g=>g.chars.map(([k,r])=>({kana:k,romaji:r,group:g.label})));
+const TOTAL = ALL_CHARS.length;
+
+function showToast(message, duration = 3000) {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = message;
+  container.appendChild(toast);
+  setTimeout(() => toast.classList.add('show'), 10);
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 300);
+  }, duration);
+}
+
+function showConfirmModal(title, msg, onConfirm) {
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmMessage').textContent = msg;
+  const modal = document.getElementById('confirmModalOverlay');
+  modal.classList.remove('hidden');
+  
+  const okBtn = document.getElementById('confirmOkBtn');
+  const cancelBtn = document.getElementById('confirmCancelBtn');
+  
+  const cleanup = () => {
+    modal.classList.add('hidden');
+    okBtn.onclick = null;
+    cancelBtn.onclick = null;
+  };
+  
+  okBtn.onclick = () => { cleanup(); onConfirm(); };
+  cancelBtn.onclick = () => { cleanup(); };
+}
+
+function speakJapanese(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'ja-JP';
+    u.rate = 0.85;
+    window.speechSynthesis.speak(u);
+  }
+}
+
+function playSoundFx(isCorrect) {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    
+    if (isCorrect) {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+      osc.frequency.setValueAtTime(880, ctx.currentTime + 0.1);
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+      osc.start(); osc.stop(ctx.currentTime + 0.3);
+    } else {
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(220, ctx.currentTime);
+      osc.frequency.setValueAtTime(164.81, ctx.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+      osc.start(); osc.stop(ctx.currentTime + 0.35);
+    }
+  } catch(e){}
+}
+
+const DETAILED_EXPLANATIONS = {
+ 'Vokal': {
+   title: 'Vokal Dasar (あ い う え お)',
+   goal: 'Mengenali, membaca, dan membedakan 5 bunyi vokal dasar bahasa Jepang.',
+   overview: 'Vokal adalah fondasi utama seluruh pengucapan Hiragana. Setiap bunyi diucapkan pendek, bersih, dan konsisten.',
+   details: [
+     {char:'あ (a)', desc:'Dibaca lurus seperti "a" dalam kata "apa".'},
+     {char:'い (i)', desc:'Dibaca lurus seperti "i" dalam kata "ibu".'},
+     {char:'う (u)', desc:'Dibaca dengan bibir netral seperti "u" pada "udang".'},
+     {char:'え (e)', desc:'Dibaca tajam seperti "e" pada "esok".'},
+     {char:'お (o)', desc:'Dibaca bulat seperti "o" pada "obat".'}
+   ],
+   examples: [
+     {kana:'あさ', romaji:'asa', meaning:'pagi'},
+     {kana:'いえ', romaji:'ie', meaning:'rumah'},
+     {kana:'うえ', romaji:'ue', meaning:'atas'}
+   ],
+   usageContext: '📌 Kalimat Sederhana:\n"あさ です" (asa desu) = Ini adalah pagi hari.',
+   commonMistakes: [
+     {wrong:'Mengucapkan う terlalu monyong seperti "u" bahasa Indonesia penuh.', correct:'Ucapkan dengan bibir lebih rileks dan rata.'}
+   ],
+   memoryTips: '💡 Tips: Urutan selalu A-I-U-E-O. Bayangkan あ seperti seseorang yang sedang membuka mulut lebar-lebar.',
+   summary: '✓ 5 Vokal dasar: あ(a), い(i), う(u), え(e), お(o). Pengucapan selalu konsisten.',
+   miniQuiz: {q:'Mana karakter untuk bunyi "i"?', options:['あ','い','う'], ans:'い'}
+ },
+ 'Baris K': {
+   title: 'Baris K (か き く け こ)',
+   goal: 'Mampu membaca dan menulis kombinasi konsonan K dengan vokal dasar.',
+   overview: 'Baris K dibentuk dengan menggabungkan konsonan K ke vokal dasar (K + A/I/U/E/O).',
+   details: [
+     {char:'か (ka)', desc:'Kombinasi K + A'},{char:'き (ki)', desc:'Kombinasi K + I'},
+     {char:'く (ku)', desc:'Kombinasi K + U'},{char:'け (ke)', desc:'Kombinasi K + E'},{char:'こ (ko)', desc:'Kombinasi K + O'}
+   ],
+   examples: [{kana:'かき', romaji:'kaki', meaning:'tiram / buah kesemek'},{kana:'きく', romaji:'kiku', meaning:'mendengar'},{kana:'こえ', romaji:'koe', meaning:'suara'}],
+   usageContext: '📌 Kalimat Sederhana:\n"こえ が きこえます" = Suara terdengar.',
+   commonMistakes: [{wrong:'Tertukar antara き (ki) dan さ (sa).', correct:'き memiliki 2 garis horizontal di atas, sedangkan さ hanya memiliki 1.'}],
+   memoryTips: '💡 く (ku) berbentuk seperti paruh burung Kakatua yang terbuka.',
+   summary: '✓ Baris K terdiri dari か(ka), き(ki), く(ku), け(ke), こ(ko).',
+   miniQuiz: {q:'Apa romaji dari く?', options:['ka','ki','ku'], ans:'ku'}
+ },
+ 'Baris S': {
+   title: 'Baris S (さ し す せ そ)',
+   goal: 'Memahami konsonan S dan pengecualian khusus pada し (shi).',
+   overview: 'Baris S mengikuti pola S + Vokal, namun untuk vokal "i" dibaca "shi", bukan "si".',
+   details: [{char:'さ (sa)', desc:'S + A'},{char:'し (shi)', desc:'Pengecualian! Dibaca "shi".'},{char:'す (su)', desc:'S + U'},{char:'せ (se)', desc:'S + E'},{char:'そ (so)', desc:'S + O'}],
+   examples: [{kana:'すし', romaji:'sushi', meaning:'sushi'},{kana:'あさ', romaji:'asa', meaning:'pagi'},{kana:'おそい', romaji:'osoi', meaning:'lambat'}],
+   usageContext: '📌 Contoh:\n"すし を たべます" = Makan sushi.',
+   commonMistakes: [{wrong:'Membaca し sebagai "si" keras.', correct:'Gunakan lidah lebih lembut untuk bunyi "shi".'}],
+   memoryTips: '💡 し (shi) berbentuk seperti kail pancing ikan.',
+   summary: '✓ Pengecualian penting: し dibaca SHI.',
+   miniQuiz: {q:'Bagaimana し dibaca?', options:['si','shi','su'], ans:'shi'}
+ },
+ 'Baris T': {
+   title: 'Baris T (たちつてと)',
+   goal: 'Memahami konsonan T serta dua pengecualian khusus: ち (chi) dan つ (tsu).',
+   overview: 'Baris T memiliki dua karakter dengan ucapan khusus yang tidak menggunakan bunyi T murni.',
+   details: [{char:'た (ta)', desc:'T + A'},{char:'ち (chi)', desc:'Pengecualian! Dibaca "chi".'},{char:'つ (tsu)', desc:'Pengecualian! Dibaca "tsu".'},{char:'て (te)', desc:'T + E'},{char:'と (to)', desc:'T + O'}],
+   examples: [{kana:'つき', romaji:'tsuki', meaning:'bulan'},{kana:'ちかい', romaji:'chikai', meaning:'dekat'}],
+   usageContext: '📌 Contoh:\n"つき が きれい" = Bulan indah.',
+   commonMistakes: [{wrong:'Membaca つ sebagai "tu".', correct:'Selalu diucapkan "tsu" dengan udara berdesis.'}],
+   memoryTips: '💡 つ (tsu) mirip ombak besar Tsunami.',
+   summary: '✓ Dua pengecualian utama: ち (chi) dan つ (tsu).',
+   miniQuiz: {q:'Mana karakter untuk bunyi "tsu"?', options:['た','ち','つ'], ans:'つ'}
+ },
+ 'Baris N': {
+   title: 'Baris N (なにぬねの)',
+   goal: 'Menguasai baris konsonan N halus.',
+   overview: 'Seluruh karakter dibaca lembut berpasangan dengan vokal dasar.',
+   details: [{char:'な (na)', desc:'N + A'},{char:'に (ni)', desc:'N + I'},{char:'ぬ (nu)', desc:'N + U'},{char:'ね (ne)', desc:'N + E'},{char:'の (no)', desc:'N + O'}],
+   examples: [{kana:'ねこ', romaji:'neko', meaning:'kucing'},{kana:'なに', romaji:'nani', meaning:'apa'}],
+   usageContext: '📌 Contoh: "これ は なに？" = Ini apa?',
+   commonMistakes: [{wrong:'Tertukar antara ぬ (nu) dan ね (ne).', correct:'ぬ berujung lingkar ekor, ね memiliki garis vertikal tegak.'}],
+   memoryTips: '💡 の (no) berbentuk lingkaran dengan garis diagonal.',
+   summary: '✓ Terdiri dari な(na), に(ni), ぬ(nu), ね(ne), の(no).',
+   miniQuiz: {q:'Apa arti kosakata ねこ (neko)?', options:['Anjing','Kucing','Burung'], ans:'Kucing'}
+ },
+ 'Baris H': {
+   title: 'Baris H (はひふへほ)',
+   goal: 'Memahami konsonan H dan variasi partikel khusus.',
+   overview: 'Baris H mencakup pengecualian ふ (fu) serta perubahan cara baca は (wa) dan へ (e).',
+   details: [{char:'は (ha/wa)', desc:'Dibaca "ha", namun sebagai partikel dibaca "wa".'},{char:'ひ (hi)', desc:'H + I'},{char:'ふ (fu)', desc:'Pengecualian! Dibaca "fu" lembut.'},{char:'へ (he/e)', desc:'Dibaca "he", sebagai partikel dibaca "e".'},{char:'ほ (ho)', desc:'H + O'}],
+   examples: [{kana:'はな', romaji:'hana', meaning:'bunga'},{kana:'ふね', romaji:'fune', meaning:'kapal'}],
+   usageContext: '📌 Contoh partikel:\n"わたし は" (watashi wa) = Saya...',
+   commonMistakes: [{wrong:'Membaca は sebagai "ha" saat berfungsi sebagai partikel.', correct:'Ganti sebutan menjadi "wa".'}],
+   memoryTips: '💡 へ (he) paling sederhana, mirip gunung kecil.',
+   summary: '✓ Pengecualian: ふ (fu), serta fungsi partikel は (wa) dan へ (e).',
+   miniQuiz: {q:'Bagaimana は dibaca ketika menjadi partikel?', options:['ha','wa','he'], ans:'wa'}
+ },
+ 'Baris M': {
+   title: 'Baris M (まみむめも)',
+   goal: 'Mengenali dan menuliskan baris M dengan konsisten.',
+   overview: 'Baris M merupakan gabungan konsonan M dengan vokal dasar tanpa pengecualian khusus.',
+   details: [{char:'ま (ma)', desc:'M + A'},{char:'み (mi)', desc:'M + I'},{char:'む (mu)', desc:'M + U'},{char:'め (me)', desc:'M + E'},{char:'も (mo)', desc:'M + O'}],
+   examples: [{kana:'みみ', romaji:'mimi', meaning:'telinga'},{kana:'まち', romaji:'machi', meaning:'kota'}],
+   usageContext: '📌 Contoh: "まち に いきます" = Pergi ke kota.',
+   commonMistakes: [{wrong:'Tertukar ぬ (nu) dan め (me).', correct:'め tidak memiliki ekor melingkar di ujung kanan bawah.'}],
+   memoryTips: '💡 も (mo) mirip pancing ikan dengan dua garis sejajar.',
+   summary: '✓ Terdiri dari ま(ma), み(mi), む(mu), め(me), も(mo).',
+   miniQuiz: {q:'Mana karakter untuk "me"?', options:['ぬ','め','ね'], ans:'め'}
+ },
+ 'Baris Y': {
+   title: 'Baris Y (やゆよ)',
+   goal: 'Mengenali 3 karakter unik pada baris Y.',
+   overview: 'Baris Y hanya memiliki 3 karakter utama: や (ya), ゆ (yu), dan よ (yo).',
+   details: [{char:'や (ya)', desc:'Y + A'},{char:'ゆ (yu)', desc:'Y + U'},{char:'よ (yo)', desc:'Y + O'}],
+   examples: [{kana:'やま', romaji:'yama', meaning:'gunung'},{kana:'ゆき', romaji:'yuki', meaning:'salju'}],
+   usageContext: '📌 Contoh: "たかい やま" = Gunung yang tinggi.',
+   commonMistakes: [{wrong:'Menuliskan 5 vokal penuh pada baris Y.', correct:'Baris Y hanya terdiri dari 3 karakter.'}],
+   memoryTips: '💡 Karakter kecil ゃゅょ digunakan untuk membuat bunyi Yōon.',
+   summary: '✓ Hanya 3 karakter: や(ya), ゆ(yu), よ(yo).',
+   miniQuiz: {q:'Berapa jumlah karakter utama pada Baris Y?', options:['3','5','4'], ans:'3'}
+ },
+ 'Baris R': {
+   title: 'Baris R (らりるれろ)',
+   goal: 'Menguasai pengucapan R khas Jepang.',
+   overview: 'Konsonan R Jepang diucapkan dengan sentuhan lidah ringan ke langit-langit mulut.',
+   details: [{char:'ら (ra)', desc:'R + A'},{char:'り (ri)', desc:'R + I'},{char:'る (ru)', desc:'R + U'},{char:'れ (re)', desc:'R + E'},{char:'ろ (ro)', desc:'R + O'}],
+   examples: [{kana:'さくら', romaji:'sakura', meaning:'bunga sakura'},{kana:'とり', romaji:'tori', meaning:'burung'}],
+   usageContext: '📌 Contoh: "さくら が さきます" = Sakura bermekaran.',
+   commonMistakes: [{wrong:'Membaca R dengan getaran lidah kuat.', correct:'Cukup ketuk lidah sekali di langit-langit depan.'}],
+   memoryTips: '💡 る (ru) memiliki lingkaran di ujung, ろ (ro) terbuka.',
+   summary: '✓ Karakter: ら(ra), り(ri), る(ru), れ(re), ろ(ro).',
+   miniQuiz: {q:'Perbedaan utama る dan ろ adalah...', options:['Ekor melingkar di ujung る','Arah garis','Jumlah coretan'], ans:'Ekor melingkar di ujung る'}
+ },
+ 'Baris W & N': {
+   title: 'Baris W & Konsonan N (わ を ん)',
+   goal: 'Memahami わ (wa), を (o/wo), dan konsonan tunggal ん (n).',
+   overview: 'Baris penutup Hiragana yang mencakup partikel penting dan satu-satunya konsonan mati.',
+   details: [{char:'わ (wa)', desc:'W + A'},{char:'を (wo/o)', desc:'Partikel objek. Dibaca lurus "o".'},{char:'ん (n)', desc:'Konsonan mati tunggal.'}],
+   examples: [{kana:'りんご', romaji:'ringo', meaning:'apel'},{kana:'ほん', romaji:'hon', meaning:'buku'}],
+   usageContext: '📌 Contoh: "ほん を よみます" = Membaca buku.',
+   commonMistakes: [{wrong:'Membaca ん diawali vokal.', correct:'ん adalah konsonan penutup sengau.'}],
+   memoryTips: '💡 ん berbentuk mirip huruf "n" kecil cetak miring.',
+   summary: '✓ を khusus partikel, ん konsonan mati tunggal.',
+   miniQuiz: {q:'Apa satu-satunya konsonan tunggal Hiragana tanpa vokal?', options:['わ','を','ん'], ans:'ん'}
+ },
+ 'Dakuten': {
+   title: 'Dakuten (゛) & Handakuten (゜)',
+   goal: 'Mengubah bunyi konsonan dasar menjadi bersuara.',
+   overview: 'Tambahkan tanda petik (゛) atau lingkaran (゜) di kanan atas karakter dasar.',
+   details: [{char:'K → G', desc:'か→が (ga), き→ぎ (gi)...'},{char:'S → Z', desc:'さ→ざ (za), し→じ (ji)...'},{char:'T → D', desc:'た→だ (da), て→で (de)...'},{char:'H → B / P', desc:'は→ば (ba) / は→ぱ (pa)'}],
+   examples: [{kana:'ごはん', romaji:'gohan', meaning:'nasi'},{kana:'てんぷら', romaji:'tempura', meaning:'tempura'}],
+   usageContext: '📌 Contoh: "ごはん を たべます" = Makan nasi.',
+   commonMistakes: [{wrong:'Menukar tanda ゛ dan ゜.', correct:'゛ untuk B/G/Z/D, ゜ khusus untuk P.'}],
+   memoryTips: '💡 ゜ bulat seperti bulatan huruf P.',
+   summary: '✓ Tanda ゛ mengubah K/S/T/H, tanda ゜ khusus merubah H menjadi P.',
+   miniQuiz: {q:'Karakter は jika diberi handakuten (゜) dibaca?', options:['ba','pa','ga'], ans:'pa'}
+ },
+ 'Yōon': {
+   title: 'Kombinasi Yōon (ゃ ゅ ょ)',
+   goal: 'Membaca kombinasi konsonan vokal bersambung.',
+   overview: 'Menggabungkan karakter berakhiran -i dengan ゃ, ゅ, ょ kecil.',
+   details: [{char:'きゃ (kya)', desc:'き + ゃ kecil'},{char:'しゃ (sha)', desc:'し + ゃ kecil'},{char:'ちゃ (cha)', desc:'ち + ゃ kecil'},{char:'にゃ (nya)', desc:'に + ゃ kecil'}],
+   examples: [{kana:'おちゃ', romaji:'ocha', meaning:'teh hijau'},{kana:'しゃしん', romaji:'shashin', meaning:'foto'}],
+   usageContext: '📌 Contoh: "おちゃ を のみます" = Minum teh.',
+   commonMistakes: [{wrong:'Menulis ゃゅょ dalam ukuran besar.', correct:'Tuliskan lebih kecil di sudut bawah.'}],
+   memoryTips: '💡 Kombinasi ini melebur dua karakter menjadi satu suku kata.',
+   summary: '✓ Selalu diawali karakter berbunyi -i ditambahi ゃ ゅ ょ kecil.',
+   miniQuiz: {q:'Bagaimana ちゃ dibaca?', options:['chia','cha','chi-ya'], ans:'cha'}
+ }
+};
+
+const STORAGE_KEY = 'hiragana-master-progress-v2';
+const MATERI_KEY = 'hiragana-master-materi-v2';
+const APP_DATA_KEY = 'hiragana_v2_extra_data';
+
+let progress = {masteredGroups:[], bestScore:0, attempts:0, theme:'auto'};
+let customMaterials = [];
+let extraData = { notes:{}, bookmarks:[], srs:{}, goal:46, calendar:[], lastPos:'' };
+
+try {
+  const r1 = localStorage.getItem(STORAGE_KEY); if(r1) progress = Object.assign(progress, JSON.parse(r1));
+  const r2 = localStorage.getItem(MATERI_KEY); if(r2) customMaterials = JSON.parse(r2);
+  const r3 = localStorage.getItem(APP_DATA_KEY); if(r3) extraData = Object.assign(extraData, JSON.parse(r3));
+} catch(e){}
+
+function saveAllData() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    localStorage.setItem(MATERI_KEY, JSON.stringify(customMaterials));
+    localStorage.setItem(APP_DATA_KEY, JSON.stringify(extraData));
+  } catch(e){}
+}
+
+const themeBtn = document.getElementById('themeToggleBtn');
+function applyTheme(theme) {
+  if(theme==='dark') document.documentElement.setAttribute('data-theme','dark');
+  else if(theme==='light') document.documentElement.setAttribute('data-theme','light');
+  else document.documentElement.removeAttribute('data-theme');
+  themeBtn.textContent = (document.documentElement.getAttribute('data-theme')==='dark' || (theme==='auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)) ? '☀️' : '🌙';
+}
+themeBtn.addEventListener('click', ()=>{
+  const current = document.documentElement.getAttribute('data-theme') || 'auto';
+  const next = current === 'dark' ? 'light' : 'dark';
+  progress.theme = next; saveAllData(); applyTheme(next);
+});
+applyTheme(progress.theme || 'auto');
+
+function updateNetStatus() {
+  const el = document.getElementById('netStatus');
+  if(navigator.onLine){
+    el.className = 'net-status net-online'; el.textContent = '🟢 Online';
+  } else {
+    el.className = 'net-status net-offline'; el.textContent = '🟠 Offline Mode';
+  }
+}
+window.addEventListener('online', updateNetStatus);
+window.addEventListener('offline', updateNetStatus);
+
+function switchTab(tab) {
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active', v.dataset.tab===tab));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
+  
+  extraData.lastPos = tab; saveAllData();
+  if(tab==='materi') showMateriList();
+  if(tab==='penjelasan') renderFullExplanation(document.getElementById('expTopicSelect').value);
+  if(tab==='dashboard') renderDashboard();
+  if(tab==='recall') renderRecallCard();
+}
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>switchTab(btn.dataset.tab));
+});
+
+if(extraData.lastPos && extraData.lastPos !== 'belajar'){
+  const banner = document.getElementById('lastPosBanner');
+  document.getElementById('lastPosTitle').textContent = extraData.lastPos.toUpperCase();
+  banner.style.display = 'flex';
+  document.getElementById('resumeLastPosBtn').onclick = ()=>{
+    switchTab(extraData.lastPos);
+    banner.style.display = 'none';
+  };
+}
+
+function updateProgressBar() {
+  const n = GOJUON.filter(g=>progress.masteredGroups.includes(g.label)).reduce((s,g)=>s+g.chars.length,0);
+  document.getElementById('progressFill').style.width = Math.round(n/TOTAL*100)+'%';
+  document.getElementById('progressLabel').textContent = n+'/'+TOTAL+' dikuasai';
+}
+
+function toggleGroupMastered(label) {
+  const i = progress.masteredGroups.indexOf(label);
+  if(i>=0) progress.masteredGroups.splice(i,1); else progress.masteredGroups.push(label);
+  saveAllData(); updateProgressBar(); renderGojuon();
+}
+
+function toggleBookmark(kana) {
+  const idx = extraData.bookmarks.indexOf(kana);
+  if(idx>=0) {
+    extraData.bookmarks.splice(idx,1);
+    showToast(`Bookmark ${kana} dihapus.`);
+  } else {
+    extraData.bookmarks.push(kana);
+    showToast(`Karakter ${kana} ditambahkan ke bookmark!`);
+  }
+  saveAllData(); renderGojuon();
+}
+
+function renderGojuon() {
+  document.getElementById('gojuonContainer').innerHTML = GOJUON.map(g=>{
+    const on = progress.masteredGroups.includes(g.label);
+    return `<div class="row-group">
+      <div class="row-head"><h2>${g.label}</h2>
+      <button class="mastery-btn${on?' on':''}" data-group="${g.label}">${on?'✓ Dikuasai':'Tandai dikuasai'}</button>
+      </div>
+      <div class="kana-grid">${g.chars.map(([k,r])=>{
+        const isBookmarked = extraData.bookmarks.includes(k);
+        return `
+        <div class="kana-cell" tabindex="0" data-kana="${k}">
+          <span class="bookmark-star ${isBookmarked?'active':''}" onclick="event.stopPropagation(); toggleBookmark('${k}')">★</span>
+          <div class="inner">
+            <span class="face front">${k}</span>
+            <span class="face back">
+              <b>${r}</b>
+              <div style="display:flex; gap:2px; margin-top:2px;">
+                <button class="icon-btn" onclick="event.stopPropagation(); speakJapanese('${k}')">🔊</button>
+                <button class="icon-btn" onclick="event.stopPropagation(); openDrawModal('${k}','${r}')">✍️</button>
+              </div>
+            </span>
+          </div>
+        </div>`;
+      }).join('')}
+      </div>
+      <div class="row-example">
+        <span>Contoh: <b>${g.example.word}</b> (${g.example.romaji}) — ${g.example.meaning}</span>
+        <button class="audio-inline-btn" onclick="speakJapanese('${g.example.word}')">🔊 Suara</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderVariasi() {
+  const mapGrid=(pairs,two)=>`<div class="map-grid">${pairs.map(p=>two?`<span class="map-pair">${p[0]} → <b onclick="speakJapanese('${p[1]}')" style="cursor:pointer">${p[1]} 🔊</b> (${p[2]})</span>`:`<span class="map-pair">${p[0]} <b onclick="speakJapanese('${p[1]}')" style="cursor:pointer">${p[1]} 🔊</b> (${p[2]})</span>`).join('')}</div>`;
+  document.getElementById('variasiContainer').innerHTML = `<div class="row-group"><h2 style="margin-bottom:10px;">Variasi Bunyi (Dakuten &amp; Yōon)</h2>
+  <details class="info-card"><summary>Dakuten ゛ &amp; Handakuten ゜</summary>
+  <div class="body">${Object.entries(DAKUTEN).map(([l,p])=>`<div class="map-group"><span class="map-group-label">${l}</span>${mapGrid(p,true)}</div>`).join('')}
+  <div class="map-group"><span class="map-group-label">Handakuten H → P</span>${mapGrid(HANDAKUTEN,true)}</div>
+  </div>
+  </details>
+  <details class="info-card"><summary>Kombinasi Yōon (ゃ ゅ ょ kecil)</summary>
+  <div class="body">${Object.entries(YOON).map(([l,p])=>`<div class="map-group"><span class="map-group-label">${l}</span>${mapGrid(p,false)}</div>`).join('')}</div>
+  </details>
+  </div>`;
+}
+
+document.getElementById('gojuonContainer').addEventListener('click', e=>{
+  const mBtn = e.target.closest('.mastery-btn');
+  if(mBtn){ toggleGroupMastered(mBtn.dataset.group); return; }
+  const cell = e.target.closest('.kana-cell');
+  if(cell && !e.target.closest('.icon-btn') && !e.target.closest('.bookmark-star')) cell.classList.toggle('flipped');
+});
+
+function renderFullExplanation(topicKey) {
+  const data = DETAILED_EXPLANATIONS[topicKey];
+  if(!data) return;
+
+  document.getElementById('explanationDisplay').innerHTML = `
+    <div class="explanation-container">
+      <div class="exp-section"><div class="exp-title">📖 1. ${data.title}</div></div>
+      <div class="exp-section"><div class="exp-title">🎯 2. Tujuan Pembelajaran</div><p class="exp-text">${data.goal}</p></div>
+      <div class="exp-section"><div class="exp-title">🧠 3. Penjelasan Umum</div><p class="exp-text">${data.overview}</p></div>
+      <div class="exp-section"><div class="exp-title">🔍 4. Detail Karakter</div><ul class="exp-list">${data.details.map(d=>`<li><b>${d.char}</b>: ${d.desc}</li>`).join('')}</ul></div>
+      <div class="exp-section"><div class="exp-title">💡 5. Contoh Kosakata</div><div class="chip-row">${data.examples.map(ex=>`<span class="chip" onclick="speakJapanese('${ex.kana}')" style="cursor:pointer"><b>${ex.kana}</b> (${ex.romaji}) = ${ex.meaning} 🔊</span>`).join('')}</div></div>
+      <div class="exp-section"><div class="exp-title">📝 6. Konteks Penggunaan</div><p class="exp-text" style="white-space:pre-line;">${data.usageContext}</p></div>
+      <div class="exp-section"><div class="exp-title">⚠️ 7. Kesalahan Umum</div>${data.commonMistakes.map(m=>`<div class="exp-box-wrong">❌ <b>Salah:</b> ${m.wrong}</div><div class="exp-box-correct">✅ <b>Benar:</b> ${m.correct}</div>`).join('')}</div>
+      <div class="exp-section"><div class="exp-title">🧠 8. Tips Mengingat</div><div class="exp-tip">${data.memoryTips}</div></div>
+      <div class="exp-section"><div class="exp-title">🔄 9. Ringkasan</div><p class="exp-text">${data.summary}</p></div>
+      <div class="exp-section">
+        <div class="exp-title">🧪 10. Latihan Cepat</div>
+        <p class="exp-text"><b>Soal:</b> ${data.miniQuiz.q}</p>
+        <div style="display:flex; gap:8px; margin-top:6px;">${data.miniQuiz.options.map(opt=>`<button class="btn btn-secondary" onclick="checkMiniQuizAnswer('${opt}','${data.miniQuiz.ans}')">${opt}</button>`).join('')}</div>
+        <div id="miniQuizFeedback" style="margin-top:6px; font-weight:bold; font-size:.85rem;"></div>
+      </div>
+    </div>`;
+}
+
+function checkMiniQuizAnswer(selected, correct) {
+  const fb = document.getElementById('miniQuizFeedback');
+  if(selected === correct){
+    playSoundFx(true);
+    fb.style.color = 'var(--success)'; fb.textContent = '🎉 Tepat sekali!';
+  } else {
+    playSoundFx(false);
+    fb.style.color = 'var(--danger)'; fb.textContent = '❌ Belum tepat, coba lagi!';
+  }
+}
+
+function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+let quizQuestions=[], quizIndex=0, quizScore=0, quizAnswers=[], examTimer=null, timeLeft=0, isAudioMode=false;
+
+function buildQuiz(n) {
+  const pool = shuffle(ALL_CHARS).slice(0, Math.min(n, ALL_CHARS.length));
+  return pool.map(item=>{
+    const distractors = shuffle(ALL_CHARS.filter(c=>c.romaji!==item.romaji)).slice(0,3).map(c=>c.romaji);
+    return {kana:item.kana, correct:item.romaji, options:shuffle([item.romaji,...distractors])};
+  });
+}
+
+function startCustomQuiz(count, type) {
+  clearInterval(examTimer); isAudioMode = false;
+  document.getElementById('quizTimerDisplay').textContent = '';
+  document.getElementById('quizAudioRepeatBtn').style.display = 'none';
+  quizQuestions = buildQuiz(count); quizIndex=0; quizScore=0; quizAnswers=[];
+  document.getElementById('quizStart').style.display='none';
+  document.getElementById('quizResult').style.display='none';
+  document.getElementById('quizPlay').style.display='block';
+  renderQuestion();
+}
+
+function startAudioQuiz() {
+  clearInterval(examTimer); isAudioMode = true;
+  document.getElementById('quizTimerDisplay').textContent = '🔊 Mode Audio';
+  document.getElementById('quizAudioRepeatBtn').style.display = 'inline-flex';
+  quizQuestions = buildQuiz(10); quizIndex=0; quizScore=0; quizAnswers=[];
+  document.getElementById('quizStart').style.display='none';
+  document.getElementById('quizResult').style.display='none';
+  document.getElementById('quizPlay').style.display='block';
+  renderQuestion();
+}
+
+function playQuizAudio() {
+  if(quizQuestions[quizIndex]){
+    speakJapanese(quizQuestions[quizIndex].kana);
+  }
+}
+
+function startExamMode() {
+  isAudioMode = false;
+  document.getElementById('quizAudioRepeatBtn').style.display = 'none';
+  quizQuestions = buildQuiz(15); quizIndex=0; quizScore=0; quizAnswers=[];
+  timeLeft = 90;
+  document.getElementById('quizStart').style.display='none';
+  document.getElementById('quizResult').style.display='none';
+  document.getElementById('quizPlay').style.display='block';
+  
+  examTimer = setInterval(()=>{
+    timeLeft--;
+    document.getElementById('quizTimerDisplay').textContent = `⏳ ${timeLeft}s`;
+    if(timeLeft<=0){
+      clearInterval(examTimer);
+      showResult();
+    }
+  },1000);
+  
+  renderQuestion();
+}
+
+function startMixedPractice() {
+  startCustomQuiz(12, 'mixed');
+}
+
+function renderQuestion() {
+  const q = quizQuestions[quizIndex];
+  document.getElementById('quizProgress').textContent = `Soal ${quizIndex+1}/${quizQuestions.length}`;
+  
+  if(isAudioMode){
+    document.getElementById('quizKanaText').textContent = '🔊 (Dengarkan)';
+    playQuizAudio();
+  } else {
+    document.getElementById('quizKanaText').textContent = q.kana;
+  }
+  
+  document.getElementById('quizFeedback').innerHTML = '';
+  document.getElementById('quizNav').style.display = 'none';
+  document.getElementById('quizOptions').innerHTML = q.options.map(o=>`<button class="quiz-option" data-opt="${o}">${o}</button>`).join('');
+  document.querySelectorAll('.quiz-option').forEach(btn=>btn.addEventListener('click',()=>answerQuestion(btn.dataset.opt)));
+}
+
+function answerQuestion(opt) {
+  const q = quizQuestions[quizIndex]; const correct = (opt === q.correct);
+  playSoundFx(correct);
+  if(correct) quizScore++;
+  quizAnswers.push({kana:q.kana, correct, answer:q.correct, userAns:opt});
+  
+  document.querySelectorAll('.quiz-option').forEach(btn=>{
+    btn.disabled = true;
+    if(btn.dataset.opt === q.correct) btn.classList.add('correct');
+    else if(btn.dataset.opt === opt) btn.classList.add('wrong');
+  });
+
+  if(!correct){
+    extraData.srs[q.kana] = {due: Date.now(), interval: 1};
+  }
+
+  document.getElementById('quizFeedback').innerHTML = `<div class="feedback ${correct?'ok':'no'}"><b>${correct?'Benar!':'Belum tepat'}</b>Karakter <b>${q.kana}</b> dibaca "${q.correct}".</div>`;
+  document.getElementById('quizNav').style.display = 'flex';
+}
+
+document.getElementById('nextBtn').addEventListener('click', ()=>{
+  quizIndex++;
+  if(quizIndex >= quizQuestions.length){
+    clearInterval(examTimer);
+    showResult();
+  } else renderQuestion();
+});
+
+function showResult() {
+  document.getElementById('quizPlay').style.display = 'none';
+  document.getElementById('quizResult').style.display = 'block';
+  const pct = Math.round(quizScore / quizQuestions.length * 100);
+  document.getElementById('resultScore').textContent = `${quizScore}/${quizQuestions.length}`;
+  document.getElementById('resultPct').textContent = `${pct}% benar`;
+  document.getElementById('reviewList').innerHTML = quizAnswers.map(a=>`<li>
+    <span><b>${a.kana}</b> (${a.correct}) ${a.userAns !== a.correct ? `<small style="color:var(--danger)">- kamu: ${a.userAns}</small>` : ''}</span>
+    <span class="tag ${a.correct?'ok':'no'}">${a.correct?'Benar':'Salah'}</span>
+  </li>`).join('');
+  
+  progress.attempts++;
+  if(quizScore > progress.bestScore) progress.bestScore = quizScore;
+  
+  const todayStr = new Date().toISOString().split('T')[0];
+  if(!extraData.calendar.includes(todayStr)) extraData.calendar.push(todayStr);
+
+  saveAllData();
+  showToast(`Kuis Selesai! Skor: ${quizScore}/${quizQuestions.length}`);
+}
+document.getElementById('retryBtn').addEventListener('click', ()=>startCustomQuiz(10, 'standard'));
+
+let recallIndex = 0;
+function renderRecallCard() {
+  const item = ALL_CHARS[recallIndex % ALL_CHARS.length];
+  document.getElementById('recallKanaDisplay').textContent = item.kana;
+  document.getElementById('recallAnswerDisplay').textContent = item.romaji;
+  document.getElementById('recallAnswerDisplay').style.display = 'none';
+  document.getElementById('recallControls').style.display = 'none';
+  document.getElementById('showRecallAnsBtn').style.display = 'inline-flex';
+  
+  const srsKeys = Object.keys(extraData.srs);
+  document.getElementById('srsCount').textContent = srsKeys.length;
+  if(srsKeys.length === 0){
+    document.getElementById('srsList').textContent = 'Belum ada kartu yang perlu di-review.';
+  } else {
+    document.getElementById('srsList').innerHTML = srsKeys.map(k=>`<span class="chip">${k} (${extraData.srs[k].interval} hari)</span>`).join(' ');
+  }
+}
+
+function toggleRecallAnswer() {
+  const item = ALL_CHARS[recallIndex % ALL_CHARS.length];
+  speakJapanese(item.kana);
+  document.getElementById('recallAnswerDisplay').style.display = 'block';
+  document.getElementById('recallControls').style.display = 'flex';
+  document.getElementById('showRecallAnsBtn').style.display = 'none';
+}
+
+function rateRecall(days) {
+  const item = ALL_CHARS[recallIndex % ALL_CHARS.length];
+  extraData.srs[item.kana] = {due: Date.now() + (days * 86400000), interval: days};
+  saveAllData();
+  recallIndex++;
+  renderRecallCard();
+  showToast(`Dijadwalkan ulang dalam ${days} hari.`);
+}
+
+function escapeHtml(s){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+
+function showMateriList() {
+  document.getElementById('materiListWrap').style.display='block';
+  document.getElementById('materiDetail').style.display='none';
+  renderMateriList();
+}
+
+function renderMateriList() {
+  const folder = document.getElementById('folderFilter').value;
+  const filtered = folder==='ALL' ? customMaterials : customMaterials.filter(m=>m.category===folder);
+  
+  document.getElementById('materiEmpty').style.display = customMaterials.length ? 'none' : 'block';
+  document.getElementById('materiList').innerHTML = filtered.map(m=>`<div class="material-card">
+    <h3>${escapeHtml(m.title)}</h3>
+    <div class="badge-row">
+      <span class="badge">${escapeHtml(m.category)}</span>
+      <span class="badge">${escapeHtml(m.level)}</span>
+    </div>
+    <div class="material-card-actions">
+      <button class="btn btn-secondary" onclick="openMateriDetail('${m.id}')">Buka Materi</button>
+      <button class="btn btn-danger" onclick="deleteMaterial('${m.id}')">Hapus</button>
+    </div>
+  </div>`).join('');
+}
+
+function deleteMaterial(id) {
+  showConfirmModal('Hapus Materi', 'Apakah Anda yakin ingin menghapus materi ini?', () => {
+    customMaterials = customMaterials.filter(m=>m.id!==id);
+    saveAllData(); 
+    renderMateriList();
+    showToast('Materi berhasil dihapus.');
+  });
+}
+
+function openMateriDetail(id) {
+  const m = customMaterials.find(x=>x.id===id); if(!m) return;
+  document.getElementById('materiListWrap').style.display='none';
+  const detail = document.getElementById('materiDetail');
+  detail.style.display='block';
+  detail.innerHTML = `
+    <button class="btn btn-secondary" style="margin-bottom:10px;" onclick="showMateriList()">← Kembali</button>
+    <h2>${escapeHtml(m.title)}</h2>
+    <div class="badge-row" style="margin-top:4px;"><span class="badge">${escapeHtml(m.category)}</span> <span class="badge">${escapeHtml(m.level)}</span></div>
+    <div class="explanation-container" style="margin-top:10px;">
+      <p style="white-space:pre-line; line-height:1.6;">${escapeHtml(m.content)}</p>
+    </div>
+  `;
+}
+
+const addOverlay = document.getElementById('addMateriOverlay');
+document.getElementById('openAddMateriBtn').addEventListener('click', ()=>addOverlay.classList.remove('hidden'));
+document.getElementById('cancelMateriBtn').addEventListener('click', ()=>addOverlay.classList.add('hidden'));
+document.getElementById('saveMateriBtn').addEventListener('click', ()=>{
+  const title = document.getElementById('materiJudul').value.trim();
+  const content = document.getElementById('materiIsi').value.trim();
+  const category = document.getElementById('materiKategori').value;
+  const level = document.getElementById('materiTingkat').value;
+  if(!title || content.length < 40){
+    document.getElementById('materiError').classList.add('show'); return;
+  }
+  document.getElementById('materiError').classList.remove('show');
+  customMaterials.unshift({id:'m'+Date.now(), title, category, level, content});
+  saveAllData();
+  document.getElementById('materiJudul').value = '';
+  document.getElementById('materiIsi').value = '';
+  addOverlay.classList.add('hidden');
+  showMateriList();
+  showToast('Materi baru berhasil disimpan!');
+});
+
+function renderDashboard() {
+  document.getElementById('dashAttempts').textContent = progress.attempts || 0;
+  document.getElementById('dashAccuracy').textContent = progress.attempts ? Math.round((progress.bestScore/10)*100)+'%' : '0%';
+  
+  const masteredCount = GOJUON.filter(g=>progress.masteredGroups.includes(g.label)).reduce((s,g)=>s+g.chars.length,0);
+  document.getElementById('goalStatusText').innerHTML = `Progres: <b>${masteredCount}</b> dari target <b>${extraData.goal}</b> dikuasai.`;
+
+  const dotsContainer = document.getElementById('streakDotsContainer');
+  const days = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+  dotsContainer.innerHTML = days.map((d,i)=>`<div class="dot ${i%2===0?'active':''}">${d}</div>`).join('');
+
+  const srsKeys = Object.keys(extraData.srs);
+  document.getElementById('weaknessList').innerHTML = srsKeys.length ? 
+    srsKeys.map(k=>`<span class="chip" style="border-color:var(--danger)">⚠️ ${k}</span>`).join(' ') : 'Tidak ada kesalahan mencolok yang terdeteksi.';
+
+  document.getElementById('bookmarkList').innerHTML = extraData.bookmarks.length ?
+    extraData.bookmarks.map(k=>`<span class="chip" onclick="speakJapanese('${k}')" style="cursor:pointer">★ ${k} 🔊</span>`).join(' ') : 'Belum ada karakter yang di-bookmark.';
+
+  renderGlossary();
+}
+
+function setStudyGoal() {
+  const val = parseInt(document.getElementById('goalInputVal').value);
+  if(val > 0){
+    extraData.goal = val; saveAllData(); renderDashboard();
+    showToast(`Target baru diset: ${val} karakter!`);
+  }
+}
+
+function renderGlossary() {
+  const items = [
+    {term:'Gojuon (50 Bunyi)', def:'Tabel dasar karakter Hiragana.'},
+    {term:'Dakuten (゛)', def:'Tanda petik untuk mengubah konsonan lurus menjadi bersuara (G, Z, D, B).'},
+    {term:'Handakuten (゜)', def:'Tanda lingkaran kecil untuk mengubah baris H menjadi P.'},
+    {term:'Yōon (ゃ ゅ ょ)', def:'Karakter kecil untuk membentuk bunyi gabungan seperti Kya, Sha, Cha.'}
+  ];
+  document.getElementById('glossaryContent').innerHTML = items.map(i=>`<div style="margin-bottom:6px;"><b>${i.term}</b>: ${i.def}</div>`).join('');
+}
+
+function filterGlossary() {
+  const q = document.getElementById('glossarySearch').value.toLowerCase();
+  const nodes = document.getElementById('glossaryContent').children;
+  for(let n of nodes){
+    n.style.display = n.textContent.toLowerCase().includes(q) ? 'block' : 'none';
+  }
+}
+
+function exportUserData() {
+  const payload = {progress, customMaterials, extraData};
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `hiragana_master_backup_${Date.now()}.json`; a.click();
+  showToast('Data berhasil diekspor!');
+}
+
+function importUserData(e) {
+  const file = e.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (evt)=>{
+    try {
+      const data = JSON.parse(evt.target.result);
+      if(data.progress) progress = data.progress;
+      if(data.customMaterials) customMaterials = data.customMaterials;
+      if(data.extraData) extraData = data.extraData;
+      saveAllData(); 
+      showToast('Data berhasil diimpor!');
+      setTimeout(() => location.reload(), 1000);
+    } catch(err){ 
+      showToast('⚠️ Berkas JSON tidak valid!'); 
+    }
+  };
+  reader.readAsText(file);
+}
+
+const drawOverlay = document.getElementById('drawModalOverlay');
+const canvas = document.getElementById('writeCanvas');
+const ctx = canvas.getContext('2d');
+let isDrawing = false, activeCanvasKana = 'あ';
+
+function openDrawModal(kana, romaji) {
+  activeCanvasKana = kana;
+  document.getElementById('drawModalTitle').textContent = `Latihan Menulis ${kana} (${romaji})`;
+  document.getElementById('canvasGuideChar').textContent = kana;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawOverlay.classList.remove('hidden');
+}
+
+document.getElementById('playCanvasAudioBtn').addEventListener('click', ()=>speakJapanese(activeCanvasKana));
+document.getElementById('closeDrawBtn').addEventListener('click', ()=>drawOverlay.classList.add('hidden'));
+document.getElementById('clearCanvasBtn').addEventListener('click', ()=>ctx.clearRect(0,0,canvas.width,canvas.height));
+document.getElementById('toggleGuideBtn').addEventListener('click', ()=>{
+  const el = document.getElementById('canvasGuideChar');
+  el.style.display = el.style.display==='none' ? 'flex' : 'none';
+});
+
+function getPos(e) {
+  const r = canvas.getBoundingClientRect();
+  const cX = e.touches ? e.touches[0].clientX : e.clientX;
+  const cY = e.touches ? e.touches[0].clientY : e.clientY;
+  return {x: cX - r.left, y: cY - r.top};
+}
+
+canvas.addEventListener('mousedown', e=>{
+  isDrawing=true; const p=getPos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y);
+  ctx.lineWidth=8; ctx.lineCap='round'; ctx.strokeStyle='#A6342A';
+});
+canvas.addEventListener('mousemove', e=>{ if(isDrawing){ const p=getPos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); }});
+canvas.addEventListener('mouseup', ()=>isDrawing=false);
+
+canvas.addEventListener('touchstart', e=>{
+  isDrawing=true; const p=getPos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y);
+  ctx.lineWidth=8; ctx.lineCap='round'; ctx.strokeStyle='#A6342A';
+}, {passive:true});
+canvas.addEventListener('touchmove', e=>{ if(isDrawing){ const p=getPos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); }}, {passive:true});
+canvas.addEventListener('touchend', ()=>isDrawing=false);
+
+let focusTimeSec = 1500, focusInterval = null;
+function setFocusTimer(mins) {
+  focusTimeSec = mins * 60;
+  updateTimerDisplay();
+}
+function updateTimerDisplay() {
+  const m = Math.floor(focusTimeSec / 60).toString().padStart(2,'0');
+  const s = (focusTimeSec % 60).toString().padStart(2,'0');
+  document.getElementById('focusTimerDisplay').textContent = `${m}:${s}`;
+}
+function toggleFocusTimer() {
+  const btn = document.getElementById('startTimerBtn');
+  if(focusInterval){
+    clearInterval(focusInterval); focusInterval=null; btn.textContent = '▶ Mulai';
+  } else {
+    btn.textContent = '⏸ Pause';
+    focusInterval = setInterval(()=>{
+      if(focusTimeSec > 0){
+        focusTimeSec--; updateTimerDisplay();
+      } else {
+        clearInterval(focusInterval); focusInterval=null;
+        showToast('🎉 Sesi Fokus Selesai! Waktunya istirahat.');
+      }
+    },1000);
+  }
+}
+function resetFocusTimer() { clearInterval(focusInterval); focusInterval=null; focusTimeSec=1500; updateTimerDisplay(); }
+
+document.getElementById('openToolsBtn').addEventListener('click', ()=>document.getElementById('toolsModalOverlay').classList.remove('hidden'));
+function closeModal(id){ document.getElementById(id).classList.add('hidden'); }
+
+renderGojuon();
+renderVariasi();
+updateProgressBar();
+updateNetStatus();
+</script>
+</body>
+</html>
